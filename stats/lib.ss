@@ -5,19 +5,23 @@
         :std/sugar)
 (export #t)
 
-(define (median lst)
-  (let ((sorted-lst (sort lst <)))
+(def (sum lst)
+  (foldl + 0 lst))
+
+(def (median lst)
+  (inexact (let ((sorted-lst (sort lst <)))
     (if (odd? (length sorted-lst))
       (list-ref sorted-lst (quotient (length sorted-lst) 2))
       (/ (+ (list-ref sorted-lst (quotient (length sorted-lst) 2))
             (list-ref sorted-lst (- (quotient (length sorted-lst) 2) 1)))
-         2))))
+         2)))))
 
 (def (mode lst)
   (let ((freq (hash)))
-    (for-each (lambda (item)
-                (hash-put! freq item (lambda (x) (+ x 1)) 0))
-              lst)
+    (for-each
+      (lambda (item)
+        (hash-update! freq item (lambda (x) (+ x 1)) 0))
+      lst)
     (let lp ((max-val #f) (max-count 0))
       (hash-for-each
        (lambda (key count)
@@ -27,26 +31,25 @@
       max-val)))
 
 (def (mean lst)
-  (/ (apply + lst)
-     (length lst)))
+  (inexact (/ (apply + lst)
+	      (length lst))))
 
 (def (variance lst)
   (let ((m (mean lst)))
     (/ (apply + (map (lambda (x) (expt (- x m) 2)) lst))
        (- (length lst) 1))))
 
-(def (std-deviation lst)
+(def (standard-deviation lst)
   (sqrt (variance lst)))
 
 (def (kurtosis lst)
   (let* ((n (length lst))
          (m (mean lst))
-         (s (std-deviation lst))
+         (s (standard-deviation lst))
          (numerator (* n (apply + (map (lambda (x) (expt (/ (- x m) s) 4)) lst)))))
     (- (/ (* numerator (+ n 1)) (* (- n 1) (- n 2) (- n 3)))
        (/ (* 3 (expt (- n 1) 2)) (* (- n 2) (- n 3)))))
   )
-
 
 (def (z-scores lst)
   (let ((m (mean lst))
@@ -59,8 +62,8 @@
          (pos (+ (* q (- len 1)) 1)))
     (if (integer? pos)
       (list-ref sorted-lst (1- pos))
-      (let* ((lower (list-ref sorted-lst (floor pos)))
-             (upper (list-ref sorted-lst (ceiling pos))))
+      (let* ((lower (list-ref sorted-lst (exact (floor pos))))
+             (upper (list-ref sorted-lst (exact (ceiling pos)))))
         (/ (+ lower upper) 2)))))
 
 (def (interquartile-range lst)
@@ -106,11 +109,11 @@
 ;;   "Euclidian distance function"
 ;;   (sqrt (apply + (map (lambda (x y) (expt (- x y) 2)) p1 p2))))
 
-;; (define (epsilon-neighborhood point points eps)
+;; (def (epsilon-neighborhood point points eps)
 ;;   (filter (lambda (p)
 ;; 	    (<= (distance point p) eps)) points))
 
-;; (define (expand-cluster core-point points eps minPts cluster-id assigned-clusters)
+;; (def (expand-cluster core-point points eps minPts cluster-id assigned-clusters)
 ;;   (let ((seeds (epsilon-neighborhood core-point points eps)))
 ;;     (for-each (lambda (seed)
 ;;                 (let ((seed-status (vector-ref assigned-clusters seed)))
@@ -270,3 +273,10 @@
 ;;             (vector-set! combined (+ i half-N) (- (list-ref even i) odd-term))))
 ;;         combined)))
 ;;   )
+
+(def (read-numbers)
+  (let loop ((numbers '()))
+    (let ((input (read-line)))
+      (if (eof-object? input)
+        (reverse numbers)
+        (loop (cons (string->number input) numbers))))))
