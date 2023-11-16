@@ -9,10 +9,10 @@
 (define (median lst)
   (let ((sorted-lst (sort lst <)))
     (if (odd? (length sorted-lst))
-        (list-ref sorted-lst (quotient (length sorted-lst) 2))
-        (/ (+ (list-ref sorted-lst (quotient (length sorted-lst) 2))
-              (list-ref sorted-lst (- (quotient (length sorted-lst) 2) 1)))
-           2))))
+      (list-ref sorted-lst (quotient (length sorted-lst) 2))
+      (/ (+ (list-ref sorted-lst (quotient (length sorted-lst) 2))
+            (list-ref sorted-lst (- (quotient (length sorted-lst) 2) 1)))
+         2))))
 
 (def (mode lst)
   (let ((freq (hash)))
@@ -23,7 +23,7 @@
       (hash-for-each
        (lambda (key count)
          (if (> count max-count)
-             (loop key count)))
+           (loop key count)))
        freq)
       max-val)))
 
@@ -47,22 +47,21 @@
        (/ (* 3 (expt (- n 1) 2)) (* (- n 2) (- n 3)))))
   )
 
-
 (def (fft x)
   "Cooley-Tukey fft"
   (let* ((N (length x))
          (half-N (quotient N 2)))
     (if (= N 1)
-        x
-        (let* ((even (fft (list-tabulate half-N (lambda (k) (list-ref x (* 2 k))))))
-               (odd (fft (list-tabulate half-N (lambda (k) (list-ref x (+ 1 (* 2 k)))))))
-               (combined (make-vector N)))
-          (for (i 0 half-N)
-            (let* ((t (exp (* -2.0 pi i 0+1i) (/ i N)))
-                   (odd-term (* t (list-ref odd i))))
-              (vector-set! combined i (+ (list-ref even i) odd-term))
-              (vector-set! combined (+ i half-N) (- (list-ref even i) odd-term))))
-          combined)))
+      x
+      (let* ((even (fft (list-tabulate half-N (lambda (k) (list-ref x (* 2 k))))))
+             (odd (fft (list-tabulate half-N (lambda (k) (list-ref x (+ 1 (* 2 k)))))))
+             (combined (make-vector N)))
+        (for (i 0 half-N)
+          (let* ((t (exp (* -2.0 pi i 0+1i) (/ i N)))
+                 (odd-term (* t (list-ref odd i))))
+            (vector-set! combined i (+ (list-ref even i) odd-term))
+            (vector-set! combined (+ i half-N) (- (list-ref even i) odd-term))))
+        combined)))
   )
 
 (def (z-scores lst)
@@ -75,10 +74,10 @@
          (len (length sorted-lst))
          (pos (+ (* q (- len 1)) 1)))
     (if (integer? pos)
-        (list-ref sorted-lst (1- pos))
-        (let* ((lower (list-ref sorted-lst (floor pos)))
-               (upper (list-ref sorted-lst (ceiling pos))))
-          (/ (+ lower upper) 2)))))
+      (list-ref sorted-lst (1- pos))
+      (let* ((lower (list-ref sorted-lst (floor pos)))
+             (upper (list-ref sorted-lst (ceiling pos))))
+        (/ (+ lower upper) 2)))))
 
 (def (interquartile-range lst)
   (- (quartile lst 0.75)
@@ -146,9 +145,9 @@
                 (when (eq? (vector-ref assigned-clusters point) 'unvisited)
                   (let ((neighbors (epsilon-neighborhood point points eps)))
                     (if (< (length neighbors) minPts)
-                        (vector-set! assigned-clusters point 'noise)
-                        (begin
-                          (set! cluster-id (+ cluster-id 1))
-                          (expand-cluster point neighbors points eps minPts cluster-id assigned-clusters)))))
-              points)
-    assigned-clusters))
+                      (vector-set! assigned-clusters point 'noise)
+                      (begin
+                        (set! cluster-id (+ cluster-id 1))
+                        (expand-cluster point neighbors points eps minPts cluster-id assigned-clusters)))))
+		points)
+	      assigned-clusters)))
