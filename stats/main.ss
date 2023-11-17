@@ -27,19 +27,20 @@
 ;;; Implement this if your CLI doesn't have commands
 (def (gerbil-stats-main/options opt)
   (let ((lst (read-numbers)))
-    ;;(displayln "mode: " (mode lst))
+    (displayln "mode: " (mode lst))
     (displayln "mean: " (mean lst))
     (displayln "sum: " (sum lst))
     (displayln "median: " (median lst))
     (displayln "variance: " (variance lst))
     (displayln "std-dev: " (standard-deviation lst))
     (displayln "kurtosis: " (kurtosis lst))
+    (displayln "skew: " (skewness lst))
     (displayln "z-scores: " (z-scores lst))
-    ;;    (displayln "quantile 25%: " (quartile lst 0.25))
-    ;;(displayln "box-plot-stats: " (box-plot-stats lst))
-
+    ;; (displayln "quantile 25%: " (quartile lst 0.25))
+    ;; (displayln "box-plot-stats: " (box-plot-stats lst))
+    ;; (displayln "fft: " (fft lst))
+    (displayln "histogram: " (histogram lst))
     ))
-
 
 ;;; Implement this if your CLI has commands
 (def (gerbil-stats-main/command cmd opt)
