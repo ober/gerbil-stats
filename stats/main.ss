@@ -13,7 +13,7 @@
 (def (main . args)
   (call-with-getopt gerbil-stats-main args
     program: "gerbil-stats"
-    help: "A one line description of your program"
+    help: "A statistics program written in Gerbil"
     ;; commands/options/flags for your program; see :std/getopt
     ;; ...
     ))
