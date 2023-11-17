@@ -1,6 +1,7 @@
 ;;; -*- Gerbil -*-
 (import :std/error
 	:std/iter
+	:std/srfi/125
 	:std/sort
         :std/sugar)
 (export #t)
@@ -16,19 +17,21 @@
             (list-ref sorted-lst (- (quotient (length sorted-lst) 2) 1)))
          2)))))
 
-(def (mode lst)
-  (let ((freq (hash)))
-    (for-each
-      (lambda (item)
-        (hash-update! freq item (lambda (x) (+ x 1)) 0))
-      lst)
-    (let lp ((max-val #f) (max-count 0))
-      (hash-for-each
-       (lambda (key count)
-         (if (> count max-count)
-           (lp key count)))
-       freq)
-      max-val)))
+(define (count-occurrences item lst)
+  (foldl (lambda (elem acc) (if (= elem item) (+ acc 1) acc)) 0 lst))
+
+(define (mode lst)
+  (let loop ((remaining lst) (highest-count 0) (current-modes '()))
+    (if (null? remaining)
+        current-modes
+        (let* ((current-item (car remaining))
+               (item-count (count-occurrences current-item lst)))
+          (cond
+            ((> item-count highest-count)
+             (loop (cdr remaining) item-count (list current-item)))
+            ((= item-count highest-count)
+             (loop (cdr remaining) highest-count (cons current-item current-modes)))
+            (else (loop (cdr remaining) highest-count current-modes)))))))
 
 (def (mean lst)
   (inexact (/ (apply + lst)
@@ -257,6 +260,12 @@
 ;;     image)
 ;; )
 
+;; (def (list-tabulate n f)
+;;   (let lp ((i 0) (lst '()))
+;;     (if (= i n)
+;;       (reverse lst)
+;;       (lp (+ i 1) (cons (f i) lst)))))
+
 ;; (def (fft x)
 ;;   "Cooley-Tukey fft"
 ;;   (let* ((N (length x))
@@ -280,3 +289,21 @@
       (if (eof-object? input)
         (reverse numbers)
         (loop (cons (string->number input) numbers))))))
+
+(def (histogram lst)
+  (let ((freq (hash)))
+    (for-each
+      (lambda (item)
+	(hash-update! freq item (lambda (x) (+ x 1)) 0))
+      lst)
+    (hash->list freq)))
+
+(def (skewness numbers)
+  (let* ((n (length numbers))
+         (mu (mean numbers))
+         (sigma (standard-deviation numbers))
+         (skew-sum (reduce + 0 (map (lambda (x) (expt (/ (- x mu) sigma) 3)) numbers))))
+    (/ skew-sum n)))
+
+(def (reduce f init lst)
+  (foldl f init lst))
