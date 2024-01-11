@@ -7,7 +7,7 @@ build-release:
 	/opt/gerbil/bin/gxpkg build --release
 
 linux-static:
-	docker run -it \
+	docker run -t \
 	-e USER=$(USER) \
 	-e GERBIL_PATH=/src/.gerbil \
 	-v $(PWD):/src:z \
