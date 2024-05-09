@@ -1,8 +1,8 @@
 ;;; -*- Gerbil -*-
 (import :std/error
-	:std/iter
-	:std/srfi/125
-	:std/sort
+	    :std/iter
+	    :std/srfi/125
+	    :std/sort
         :std/sugar)
 (export #t)
 
@@ -11,11 +11,11 @@
 
 (def (median lst)
   (inexact (let ((sorted-lst (sort lst <)))
-    (if (odd? (length sorted-lst))
-      (list-ref sorted-lst (quotient (length sorted-lst) 2))
-      (/ (+ (list-ref sorted-lst (quotient (length sorted-lst) 2))
-            (list-ref sorted-lst (- (quotient (length sorted-lst) 2) 1)))
-         2)))))
+             (if (odd? (length sorted-lst))
+               (list-ref sorted-lst (quotient (length sorted-lst) 2))
+               (/ (+ (list-ref sorted-lst (quotient (length sorted-lst) 2))
+                     (list-ref sorted-lst (- (quotient (length sorted-lst) 2) 1)))
+                  2)))))
 
 (define (count-occurrences item lst)
   (foldl (lambda (elem acc) (if (= elem item) (+ acc 1) acc)) 0 lst))
@@ -23,19 +23,19 @@
 (define (mode lst)
   (let loop ((remaining lst) (highest-count 0) (current-modes '()))
     (if (null? remaining)
-        current-modes
-        (let* ((current-item (car remaining))
-               (item-count (count-occurrences current-item lst)))
-          (cond
-            ((> item-count highest-count)
-             (loop (cdr remaining) item-count (list current-item)))
-            ((= item-count highest-count)
-             (loop (cdr remaining) highest-count (cons current-item current-modes)))
-            (else (loop (cdr remaining) highest-count current-modes)))))))
+      current-modes
+      (let* ((current-item (car remaining))
+             (item-count (count-occurrences current-item lst)))
+        (cond
+         ((> item-count highest-count)
+          (loop (cdr remaining) item-count (list current-item)))
+         ((= item-count highest-count)
+          (loop (cdr remaining) highest-count (cons current-item current-modes)))
+         (else (loop (cdr remaining) highest-count current-modes)))))))
 
 (def (mean lst)
   (inexact (/ (apply + lst)
-	      (length lst))))
+	          (length lst))))
 
 (def (variance lst)
   (let ((m (mean lst)))
@@ -294,7 +294,7 @@
   (let ((freq (hash)))
     (for-each
       (lambda (item)
-	(hash-update! freq item (lambda (x) (+ x 1)) 0))
+	    (hash-update! freq item (lambda (x) (+ x 1)) 0))
       lst)
     (hash->list freq)))
 
