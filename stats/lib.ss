@@ -1,8 +1,8 @@
 ;;; -*- Gerbil -*-
 (import :std/error
-	    :std/iter
-	    :std/srfi/125
-	    :std/sort
+	:std/iter
+	:std/srfi/125
+	:std/sort
         :std/sugar)
 (export #t)
 
@@ -106,6 +106,15 @@
          (lower-whisker (max (min lst) (- q1 (* 1.5 iqr))))
          (upper-whisker (min (max lst) (+ q3 (* 1.5 iqr)))))
     (list lower-whisker q1 median q3 upper-whisker)))
+
+(def (geometric-mean numbers)
+  (def (product lst)
+    (if (null? lst)
+        1
+        (* (car lst) (product (cdr lst)))))
+  (def n (length numbers))
+  (def prod (product numbers))
+  (expt prod (/ 1 n)))
 
 ;; ;; dbscan
 ;; (def (distance p1 p2)
