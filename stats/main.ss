@@ -36,6 +36,7 @@
     (displayln "std-dev: " (standard-deviation lst))
     (displayln "kurtosis: " (kurtosis lst))
     (displayln "skew: " (skewness lst))
+    (displayln "geometric mean: " (geometric-mean lst))
     ;;(displayln "z-scores: " (z-scores lst))
     ;; (displayln "quantile 25%: " (quartile lst 0.25))
     ;; (displayln "box-plot-stats: " (box-plot-stats lst))
